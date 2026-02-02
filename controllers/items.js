@@ -32,14 +32,27 @@ const updateItem = async (req, res) => {
     body: { name, description, quantity, category },
   } = req;
 
-  if (name === "" || description === "" || quantity === "" || category === "") {
+  if (!name && !description && !quantity && !category) {
     throw new BadRequestError(
-      "Name, description, quantity, and category must be present.",
+      "At least one of the following must be present: name, description, quantity and category.",
     );
+  }
+  const itemUpdateData = {};
+  if (name) {
+    itemUpdateData.name = name;
+  }
+  if (description) {
+    itemUpdateData.description = description;
+  }
+  if (quantity) {
+    itemUpdateData.quantity = quantity;
+  }
+  if (category) {
+    itemUpdateData.category = category;
   }
   const item = await Item.findByIdAndUpdate(
     { _id: itemId, createdBy: userId },
-    req.body,
+    itemUpdateData,
     { new: true, runValidators: true },
   );
   if (!item) {
