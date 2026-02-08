@@ -19,7 +19,6 @@ const ItemSchema = new mongoose.Schema(
       min: [0, "Quantity cannot be negative"],
       max: [1000, "Quantity cannot exceed 1000"],
     },
-    inStock: Boolean,
     category: {
       type: String,
       required: [true, "Category is required."],
@@ -35,11 +34,4 @@ const ItemSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
-ItemSchema.pre("save", function () {
-  if (this.isModified("quantity")) {
-    this.inStock = this.quantity > 0;
-  }
-});
-
 module.exports = mongoose.model("Item", ItemSchema);
